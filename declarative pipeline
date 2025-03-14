@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+      tools {
+        maven "maven"
+    }
+    stages {
+        stage ('git clone') {
+            steps {
+                git branch: 'master',url:'https://github.com/mangeshbhandare01234/maven-web-app.git'
+            }
+        }
+        stage ('maven build') {
+            steps {
+                sh'mvn clean package'
+            }
+        }
+        stage ('')
+    }
+}
