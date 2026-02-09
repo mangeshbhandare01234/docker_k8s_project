@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven'
+        jdk 'java11'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/USERNAME/my-maven-project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t myapp:latest .'
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                sh 'docker tag myapp:latest USERNAME/myapp:latest'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                sh 'docker push USERNAME/myapp:latest'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+    }
+}
